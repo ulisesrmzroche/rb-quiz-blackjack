@@ -41,8 +41,8 @@ class Game
     end
 
     def draw_card(u)
-        card = @card_shoe.draw_card!(1)
-        u.add_card_to_hand card if card.first
+        cards = @card_shoe.draw_cards!(1)
+        u.add_card_to_hand card if cards.first
         u.save
     end
 
@@ -129,7 +129,7 @@ class Game
 
     def setup_player_and_dealer
         [@player, @dealer].each do |x|
-            cards = @card_shoe.draw_card!(2)
+            cards = @card_shoe.draw_cards!(2)
             if cards
                 cards.each do |c|
                     x.add_card_to_hand c

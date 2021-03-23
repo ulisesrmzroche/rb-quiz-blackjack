@@ -10,7 +10,7 @@ RSpec.describe CardShoe do
     it "should draw a given number of cards fron a random deck" do
         cs = CardShoe.new
         expect(cs.total_card_count).to eq(312) 
-        cs.draw_card!(2)
+        cs.draw_cards!(2)
         expect(cs.total_card_count).to eq(310) 
     end
 
@@ -21,7 +21,7 @@ RSpec.describe CardShoe do
             cs.card_decks[0],
             cs.card_decks[1],
         ]
-        cs.draw_card!(2)
+        cs.draw_cards!(2)
         expect(cs.instance_variable_get(:@did_shuffle)).to be true
     end
 
