@@ -28,11 +28,11 @@ class CardShoe
     end
 
     def can_draw?
-        total_card_count > 0
+        self.total_card_count > 0
     end
 
     def is_empty?
-        total_card_count == 0
+        self.total_card_count == 0
     end
 
     def has_two_decks_remaining?
