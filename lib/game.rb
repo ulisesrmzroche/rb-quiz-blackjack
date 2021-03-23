@@ -31,13 +31,10 @@ class Game
         puts "Round #{round}"
         puts "=============="
 
-
         resolve_first_turn
-
         unless @winner then
             resolve_turn @turn
         end
-
         end_round
 
         if @single_hand_game
@@ -58,7 +55,6 @@ class Game
 
     def resolve_turn(turn)
         puts "Turn #{turn}"
-
 
         if @card_shoe.is_empty?
             puts "Ran out of cards. Game is over"
