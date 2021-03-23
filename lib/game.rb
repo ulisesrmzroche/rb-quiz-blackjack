@@ -50,11 +50,13 @@ class Game
         if card
             u.add_card_to_hand card
             u.save
+            puts "=> #{card.rank}#{card.suit}"
         end
     end
 
     def resolve_turn(turn)
         puts "Turn #{turn}"
+        puts "------------"
 
         if @card_shoe.is_empty?
             puts "Ran out of cards. Game is over"
@@ -122,6 +124,7 @@ class Game
     def resolve_first_turn
 
         puts "Turn 1"
+        puts "------"
         pcs = @player.current_score
         dcs = @dealer.current_score
 
@@ -148,6 +151,7 @@ class Game
     end
 
     def end_turn
+        puts ""
         puts "Player Score: #{@player.current_score}" if @player.current_score > 0
         puts "Dealer Score: #{@dealer.current_score}" if @dealer.current_score > 0
         puts "Winner: #{@winner}" if @winner
