@@ -35,4 +35,8 @@ class Player
             @current_hand.flatten!
         end
     end
+
+    def clear_current_hand
+        @current_hand = []
+    end
 end

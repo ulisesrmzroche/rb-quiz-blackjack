@@ -31,6 +31,8 @@ class Game
         end
         @round += 1
         @turn = 1
+        @player.clear_current_hand
+        @dealer.clear_current_hand
         puts ""
         puts ""
         if @single_hand_game
@@ -42,7 +44,7 @@ class Game
 
     def draw_card(u)
         cards = @card_shoe.draw_cards!(1)
-        card = cards.first
+        card = cards && cards.first
         if card
             u.add_card_to_hand card
             u.save
@@ -128,6 +130,7 @@ class Game
         puts ""
         @winner = nil
         @turn += 1
+        @end_msg = ""
     end
 
     def setup_player_and_dealer
