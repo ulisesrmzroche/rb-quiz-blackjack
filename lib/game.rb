@@ -24,6 +24,7 @@ class Game
     def resolve_round(round)
         puts "Round #{round}"
         puts "=============="
+
         setup_player_and_dealer
 
         resolve_first_turn
@@ -114,9 +115,15 @@ class Game
     end
 
     def resolve_first_turn
+
         puts "Turn 1"
         pcs = @player.current_score
         dcs = @dealer.current_score
+
+        if pcs == 0 || dcs == 0
+            end_turn
+            return
+        end
 
         is_player_win = pcs == 21 && dcs != 21
         is_tie = pcs == 21 && dcs == 21
