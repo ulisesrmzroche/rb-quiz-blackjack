@@ -1,11 +1,12 @@
 require_relative 'card_deck'
 
 class CardShoe 
-    attr_accessor :card_decks, :num_decks
+    attr_accessor :card_decks, :num_decks, :did_shuffle
 
     def initialize(num_decks = 6)
         @num_decks = num_decks
         @card_decks = self.generate_card_decks(@num_decks) || []
+        @did_shuffle = false
     end
 
     def generate_card_decks(x)
@@ -40,18 +41,28 @@ class CardShoe
 
     def shuffle_decks
       @card_decks.each do |deck|
-        @deck.shuffle!
+        deck.shuffle!
+        @did_shuffle = true
       end
     end
 
     def draw_card!(x)
-
-        if has_two_decks_remaining?
+        cards = []
+        if self.has_two_decks_remaining?
             shuffle_decks
         end
 
+        if self.is_empty?
+            return []
+        end
+
         # from a random deck pick two cards
+
         target_card_deck = @card_decks.sample
+        if target_card_deck.is_empty?
+            @card_decks.delete target_card_deck
+            target_card_deck = @card_decks.sample
+        end
         cards = target_card_deck.draw_cards!(x)
         cards
     end

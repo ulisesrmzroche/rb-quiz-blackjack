@@ -9,12 +9,18 @@ class CardDeck
       @cards.shuffle!
     end
 
+    def is_empty?
+      @cards.length == 0
+    end
+
     def draw_cards!(x)
-      cards = @cards.sample(2)
-      cards.each do |card|
-        @cards.delete card
+      unless self.is_empty?
+        cards = @cards.sample(x)
+        cards.each do |card|
+          @cards.delete card
+        end
+        cards
       end
-      cards
     end
 
     def total_card_count
