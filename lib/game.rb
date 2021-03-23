@@ -16,9 +16,6 @@ class Game
 
     def start
         resolve_round @round
-        unless @single_hand_game
-            resolve_round @round
-        end
     end
 
     def resolve_round(round)
@@ -32,7 +29,7 @@ class Game
         puts "=============="
 
         resolve_first_turn
-        unless @winner then
+        unless @winner != nil then
             resolve_turn @turn
         end
         end_round
@@ -55,8 +52,12 @@ class Game
     end
 
     def resolve_turn(turn)
+        if @winner
+          return
+        end
         puts "Turn #{turn}"
         puts "------------"
+
 
         if @card_shoe.is_empty?
             puts "Ran out of cards. Game is over"
@@ -104,7 +105,11 @@ class Game
 
         @winner = "Player" if !@player.did_bust? && pcs > dcs && !@player.can_draw?
         @winner = "Dealer" if !@dealer.did_bust? && dcs > pcs && !@dealer.can_draw?
-        @winner = "Push" if pcs == dcs and (!@player.did_bust? && !@dealer.did_bust?)
+        @winner = "Push" if pcs == dcs && (!@player.did_bust? && !@dealer.did_bust?)
+
+        if @player.can_draw? || @dealer.can_draw?
+            @winner = nil
+        end
         
     end
 
@@ -158,6 +163,7 @@ class Game
         puts @end_msg
         puts ""
         @turn += 1
+        resolve_turn(@turn)
         @end_msg = ""
     end
 
