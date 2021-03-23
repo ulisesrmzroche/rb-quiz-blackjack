@@ -18,10 +18,11 @@ class Game
         @end_msg = ""
         @single_hand_game = options[:single_hand] || false
         @game_over = false
+        @options = options
     end
 
     def start
-        start_banner
+        start_banner @options
         until @game_over
             resolve_round @round
         end
@@ -43,13 +44,10 @@ class Game
         end
 
         start_round_banner round
-
-        resolve_first_turn
-        unless @winner != nil then
+        until @winner
             resolve_turn @turn
         end
         end_round
-
         if @single_hand_game
             @game_over = true
             @round = 1
@@ -57,7 +55,6 @@ class Game
     end
 
     def draw_card(u)
-
         cards = @card_shoe.draw_cards!(1)
         card = cards && cards.first
         if card
@@ -78,52 +75,63 @@ class Game
             return
         end
 
-        puts "Turn #{turn}"
-        puts "------------"
+        start_turn_banner turn
 
-        if @player.can_draw?
-            puts "Player hits..."
-            draw_card(@player)
+        if turn == 1
+            check_scores
         else
-            puts "Player holds..."
+            if @player.can_draw?
+                puts "Player hits..."
+                draw_card(@player)
+            else
+                puts "Player holds..."
+            end
+
+            if @dealer.can_draw?
+                puts "Dealer hits..."
+                draw_card(@dealer)
+            else
+                puts "Dealer holds..."
+            end
+            check_scores
         end
-
-        if @dealer.can_draw?
-            puts "Dealer hits..."
-            draw_card(@dealer)
-        else
-            puts "Dealer holds..."
-        end
-
-        check_scores
-
         end_turn
-
     end
 
     def check_scores
         pcs = @player.current_score
         dcs = @dealer.current_score
+        if @turn == 1
+            is_player_win = pcs == 21 && dcs != 21
+            is_tie = pcs == 21 && dcs == 21
+            if is_player_win
+                @winner = "Player"
+                @end_msg = "Congrats! Natural Blackjack"
+            end
+            if is_tie
+                @winner = "None"
+                @end_msg = "It's a tie!"
+            end
+        else
+            if @dealer.did_bust?
+                @winner = "Player" if pcs <= 21
+                @end_msg = "Dealer bust!"
+            end
 
-        if @dealer.did_bust?
-            @winner = "Player" if pcs <= 21
-            @end_msg = "Dealer bust!"
+            if @player.did_bust?
+                @winner = "Dealer" unless @dealer.did_bust?
+                @end_msg = "Player bust!"
+            end
+
+            if @dealer.did_bust? and @player.did_bust?
+                @winner = "None"
+                @end_msg = "Both players busted"
+            end
+
+            @winner = "Player" if !@player.did_bust? && pcs > dcs && !@dealer.can_draw?
+            @winner = "Dealer" if !@dealer.did_bust? && dcs > pcs && !@player.can_draw?
+            @winner = "Push" if pcs == dcs && (!@player.did_bust? && !@dealer.did_bust?)
         end
-
-        if @player.did_bust?
-            @winner = "Dealer" unless @dealer.did_bust?
-            @end_msg = "Player bust!"
-        end
-
-        if @dealer.did_bust? and @player.did_bust?
-            @winner = "None"
-            @end_msg = "Both players busted"
-        end
-
-        @winner = "Player" if !@player.did_bust? && pcs > dcs && !@dealer.can_draw?
-        @winner = "Dealer" if !@dealer.did_bust? && dcs > pcs && !@player.can_draw?
-        @winner = "Push" if pcs == dcs && (!@player.did_bust? && !@dealer.did_bust?)
-
         
     end
 
@@ -136,48 +144,18 @@ class Game
         @dealer.save
         @winner = nil
         @end_msg = nil
-        puts ""
-        puts ""
-    end
-
-    def resolve_first_turn
-
-        puts "Turn 1"
-        puts "------"
-        pcs = @player.current_score
-        dcs = @dealer.current_score
-
-
-        is_player_win = pcs == 21 && dcs != 21
-        is_tie = pcs == 21 && dcs == 21
-
-        if is_player_win
-            @winner = "Player"
-            @end_msg = "Congrats! Natural Blackjack"
-            end_turn
-            return
-        end
-
-        if is_tie
-            @winner = "None"
-            @end_msg = "It's a tie!"
-            end_turn
-            return
-        end
-
-        end_turn
-    
+        end_round_banner
     end
 
     def end_turn
-        puts ""
-        puts "Player Score: #{@player.current_score}" if @player.current_score > 0
-        puts "Dealer Score: #{@dealer.current_score}" if @dealer.current_score > 0
-        puts "Winner: #{@winner}" if @winner
-        puts @end_msg
-        puts ""
+        end_turn_banner({
+            player_score: @player.current_score,
+            dealer_score: @dealer.current_score,
+            winner: @winner,
+            turn: @turn,
+            msg: @end_msg
+        })
         @turn += 1
-        resolve_turn(@turn)
         @end_msg = ""
     end
 
@@ -194,8 +172,8 @@ class Game
     end
 
     def end_game
-        puts "GAME END"
-        puts @end_msg
-        puts "Total Rounds: #{@round}"
+        end_game_banner({
+            round: @round
+        })
     end
 end
