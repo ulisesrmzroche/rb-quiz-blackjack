@@ -51,6 +51,7 @@ class Game
 
         if @single_hand_game
             @game_over = true
+            @round = 1
         end
     end
 
@@ -194,6 +195,7 @@ class Game
     def end_game
         puts "GAME END"
         puts @end_msg
+        puts "Total Rounds: #{@round}"
         exit
     end
 end
