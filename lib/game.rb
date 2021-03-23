@@ -1,8 +1,11 @@
 require_relative 'card_shoe'
 require_relative 'dealer'
 require_relative 'player'
+require_relative 'banners'
 
 class Game 
+    include Banners
+
     def initialize(player, dealer, options)
         @card_shoe = CardShoe.new
         @player = player || Player.new
@@ -15,20 +18,21 @@ class Game
     end
 
     def start
-        resolve_round @round
+        start_banner
+        resolve_round
     end
 
-    def resolve_round(round)
+
+    def resolve_round
         setup_player_and_dealer
 
         if @player.current_score == 0 || @dealer.current_score == 0
             return
         end
 
-        puts "Round #{round}"
-        puts "=============="
-
+        start_round_banner @round
         resolve_first_turn
+
         unless @winner != nil then
             resolve_turn @turn
         end
@@ -37,7 +41,7 @@ class Game
         if @single_hand_game
             exit
         else
-            resolve_round @round
+            resolve_round
         end
     end
 
