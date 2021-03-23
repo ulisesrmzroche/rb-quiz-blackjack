@@ -2,9 +2,11 @@ require_relative 'card_shoe'
 require_relative 'dealer'
 require_relative 'player'
 require_relative 'banners'
+require_relative 'score_checker'
 
 class Game 
     include Banners
+    include ScoreChecker
 
     attr_accessor :card_shoe, :winner, :round
 
@@ -71,7 +73,7 @@ class Game
         start_turn_banner turn
 
         if turn == 1
-            check_scores
+            check_scores turn
         else
             if @player.can_draw?
                 puts "Player hits..."
@@ -86,46 +88,13 @@ class Game
             else
                 puts "Dealer holds..."
             end
-            check_scores
+            check_scores turn
         end
         end_turn
     end
 
-    def check_scores
-        pcs = @player.current_score
-        dcs = @dealer.current_score
-        if @turn == 1
-            is_player_win = pcs == 21 && dcs != 21
-            is_tie = pcs == 21 && dcs == 21
-            if is_player_win
-                @winner = "Player"
-                @end_msg = "Congrats! Natural Blackjack"
-            end
-            if is_tie
-                @winner = "None"
-                @end_msg = "It's a tie!"
-            end
-        else
-            if @dealer.did_bust?
-                @winner = "Player" if pcs <= 21
-                @end_msg = "Dealer bust!"
-            end
-
-            if @player.did_bust?
-                @winner = "Dealer" unless @dealer.did_bust?
-                @end_msg = "Player bust!"
-            end
-
-            if @dealer.did_bust? && @player.did_bust?
-                @winner = "None"
-                @end_msg = "Both players busted"
-            end
-
-            @winner = "Player" if !@player.did_bust? && pcs > dcs && !@dealer.can_draw?
-            @winner = "Dealer" if !@dealer.did_bust? && dcs > pcs && !@player.can_draw?
-            @winner = "Push" if pcs == dcs && (!@player.did_bust? && !@dealer.did_bust?)
-        end
-        
+    def check_scores(turn)
+        @winner = self.get_winner(@player, @dealer, turn)
     end
 
     def end_round
