@@ -25,9 +25,9 @@ class Game
         setup_player_and_dealer
 
         if @player.current_score == 0 || @dealer.current_score == 0
-            end_round
             return
         end
+
         puts "Round #{round}"
         puts "=============="
 
@@ -117,6 +117,8 @@ class Game
         @dealer.clear_current_hand
         @player.save
         @dealer.save
+        @winner = nil
+        @end_msg = nil
         puts ""
         puts ""
     end
@@ -155,7 +157,6 @@ class Game
         puts "Winner: #{@winner}" if @winner
         puts @end_msg
         puts ""
-        @winner = nil
         @turn += 1
         @end_msg = ""
     end
