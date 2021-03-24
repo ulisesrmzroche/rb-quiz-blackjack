@@ -42,7 +42,7 @@ class Player
     def update_current_score!
         @current_score = 0
         @current_hand.each do |c|
-          if c.rank === "A" and @current_score <= 10
+          if c.rank == "A" and @current_score <= 10
             c.value = 11
           end
           @current_score += c.value
