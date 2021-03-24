@@ -8,6 +8,7 @@ RSpec.describe Game do
         @dealer = Dealer.new
         @player = Player.new
         @game = Game.new(@player, @dealer, { single_hand: true })
+        allow($stdout).to receive(:write)
     end
 
     it "should start without a winner" do
