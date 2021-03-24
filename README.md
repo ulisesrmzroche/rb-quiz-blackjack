@@ -7,11 +7,13 @@
 ## Running the game
 
 To play a game: `bundle exec rake play`
+
 To play a single-hand game: `bundle exec rake 'play[single_hand]'`
 
-Run tests with `bundle exec rake spec`
 
 ## SPEC
+
+Run tests with `bundle exec rake spec`
 
 - [x] Create an application that mimics the game of black jack from the Ruby console based on the rules above.
 
