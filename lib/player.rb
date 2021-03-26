@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class Player
-  attr_accessor :current_hand, :current_score
+  attr_accessor :current_hand, :current_score, :name
 
   def initialize
     @current_hand = []
     @current_score = 0
+    @name = 'Player'
   end
 
   def soft_hand?

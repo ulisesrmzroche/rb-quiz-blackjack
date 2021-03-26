@@ -25,6 +25,10 @@ class Game
     @options = options
   end
 
+  def players
+    [@player, @dealer]
+  end
+
   def start
     start_banner @options
     resolve_round @round until @game_over
@@ -44,7 +48,21 @@ class Game
     resolve_turn @turn until @winner
     end_round
 
-    return end_game msg: 'Single Hand Game' if @single_hand_game
+    return end_game msg: 'Single Hand Game' if single_hand_game?
+  end
+
+  def single_hand_game?
+    @single_hand_game == true
+  end
+  
+  def draw_cards_for_user(user, num_cards)
+    if user.can_draw?
+      puts "#{user.name} hits..."
+      user.draw_cards_from_card_shoe num_cards, @card_shoe
+      user.save
+    else
+      puts "#{user.name} holds..."
+    end
   end
 
   def resolve_turn(turn)
@@ -52,44 +70,42 @@ class Game
 
     start_turn_banner turn
 
-    if turn == 1
-      [@player, @dealer].each do |user|
-        user.draw_cards_from_card_shoe 2, @card_shoe
-        user.save
-      end 
-      return if @player.current_score.zero? || @dealer.current_score.zero?
-    else
-      if @player.can_draw?
-        puts 'Player hits...'
-        @player.draw_cards_from_card_shoe 1, @card_shoe
-        @player.save
-      else
-        puts 'Player holds...'
-      end
-  
-      if @dealer.can_draw?
-        puts 'Dealer hits...'
-        @dealer.draw_cards_from_card_shoe 1, @card_shoe
-        @dealer.save
-      else
-        puts 'Dealer holds...'
-      end
+    num_cards = first_turn? ? 1 : 2
+    players.each do |player|
+      draw_cards_for_user num_cards, player
     end
+    return if any_zero_scores? && first_turn?
 
     @winner = get_winner(@player, @dealer, @turn)
     end_turn
   end
 
+  def first_turn?
+    @turn == 1
+  end
+
+  def zero_scores?
+    @player.current_score.zero? || @dealer.current_score.zero?
+  end
+
   def end_round
-    @round += 1
-    @turn = 1
-    @player.clear_current_hand
-    @dealer.clear_current_hand
-    @player.save
-    @dealer.save
+    reset_timers
+    clear_cards
     @winner = nil
     @end_msg = nil
     end_round_banner
+  end
+
+  def reset_timers
+    @round += 1
+    @turn = 1
+  end
+
+  def clear_cards
+    players.each do |player|
+      player.clear_current_hand
+      player.save
+    end
   end
 
   def end_turn
