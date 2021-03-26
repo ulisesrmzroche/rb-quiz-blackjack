@@ -20,6 +20,8 @@ Because this is an interview project, there were time constraints so that this p
 
 What I would like to do in a future draft is to keep running it through Rubocop. Because I am on an apple m1, the ruby linter on vscode keeps breaking the editor. I would run rubocop with a github action, so that it points it out there and I dont have to lint locally. If I could do the project again, I'd be writing code against a linter so that it would alert me of code smeells and ugly code before I save it.
 
+[ ] - The test suite needs to be refactored. It could be using factories instead of raw instantiation. There are also some weak tests that were left as placeholders. 
+
 ## SPEC
 
 Run tests with `bundle exec rake spec`
