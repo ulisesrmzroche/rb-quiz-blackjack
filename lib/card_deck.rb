@@ -17,9 +17,9 @@ class CardDeck
     cards.length.zero?
   end
 
-  def draw_cards!(x)
+  def draw_cards!(num_cards)
     unless is_empty?
-      cards = self.cards.sample(x)
+      cards = self.cards.sample(num_cards)
       cards.each do |card|
         self.cards.delete card
       end
