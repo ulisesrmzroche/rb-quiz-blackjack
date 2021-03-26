@@ -1,0 +1,6 @@
+#!/usr/bin/ruby
+
+require './lib/blackjack'
+
+game = Blackjack.new(ARGV)
+game.start
