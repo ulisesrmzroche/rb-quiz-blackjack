@@ -32,7 +32,7 @@ class Game
   end
 
   def resolve_round(round)
-    if @card_shoe.is_empty?
+    if @card_shoe.empty?
       @game_over = true
       @end_msg = 'Ran out of cards. Game over'
       return
@@ -53,7 +53,7 @@ class Game
   end
 
   def draw_card(u)
-    cards = @card_shoe.draw_cards!(1)
+    cards = @card_shoe.draw_cards(1)
     card = cards&.first
     if card
       u.add_card_to_hand card
@@ -65,7 +65,7 @@ class Game
   def resolve_turn(turn)
     return if @winner
 
-    if @card_shoe.is_empty?
+    if @card_shoe.empty?
       @game_over = true
       @end_msg = 'Ran out of cards. Game over'
       return
@@ -124,7 +124,7 @@ class Game
 
   def setup_player_and_dealer
     [@player, @dealer].each do |user|
-      cards = @card_shoe.draw_cards!(2)
+      cards = @card_shoe.draw_cards(2)
       next unless cards && cards.length == 2
 
       cards.each do |c|

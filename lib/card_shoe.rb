@@ -19,7 +19,7 @@ class CardShoe
     card_decks = []
     num_cards.times do
       deck = CardDeck.new
-      deck.shuffle!
+      deck.shuffle
       card_decks << deck
     end
     card_decks
@@ -37,7 +37,7 @@ class CardShoe
     total_card_count.positive?
   end
 
-  def is_empty?
+  def empty?
     total_card_count.zero?
   end
 
@@ -50,9 +50,9 @@ class CardShoe
     @did_shuffle = true
   end
 
-  def draw_cards!(num_cards)
+  def draw_cards(num_cards)
     cards = []
-    return [] if is_empty?
+    return [] if empty?
 
     if has_two_decks_remaining? && !did_shuffle?
       shuffle_decks
@@ -60,10 +60,10 @@ class CardShoe
     end
 
     target_card_deck = @card_decks.sample
-    if target_card_deck.is_empty?
+    if target_card_deck.empty?
       @card_decks.delete target_card_deck
       target_card_deck = @card_decks.sample
     end
-    target_card_deck.draw_cards!(num_cards)
+    target_card_deck.draw_cards(num_cards)
   end
 end

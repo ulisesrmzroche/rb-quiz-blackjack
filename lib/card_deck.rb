@@ -9,22 +9,22 @@ class CardDeck
     @cards = generate_cards
   end
 
-  def shuffle!
-    cards.shuffle!
+  def shuffle
+    @cards.shuffle!
   end
 
-  def is_empty?
-    cards.length.zero?
+  def empty?
+    @cards.length.zero?
   end
 
-  def draw_cards!(num_cards)
-    unless is_empty?
-      cards = self.cards.sample(num_cards)
-      cards.each do |card|
-        self.cards.delete card
-      end
-      cards
+  def draw_cards(num_cards)
+    return if empty?
+
+    drawn_cards = @cards.sample(num_cards)
+    drawn_cards.each do |card|
+      @cards.delete card
     end
+    drawn_cards
   end
 
   def total_card_count
