@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './spinner'
+require_relative './utils/spinner'
 
 # This module prints out notices and alerts
 module Banners
@@ -40,7 +40,7 @@ module Banners
     puts "Total Rounds: #{opts[:round]}"
   end
 
-  def print_scores(player, dealer)
+  def print_scores(player = 0, dealer = 0)
     puts "Player Score: #{player}" if player.positive?
     puts "Dealer Score: #{dealer}" if dealer.positive?
   end
@@ -55,7 +55,7 @@ module Banners
 
   def end_turn_banner(opts)
     print_scores opts[:player_score], opts[:dealer_score]
-    print_scores opts[:winner]
+    print_winner opts[:winner], opts[:turn]
     print_message opts[:msg]
     puts ''
   end
