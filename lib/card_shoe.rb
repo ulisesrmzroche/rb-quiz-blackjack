@@ -2,6 +2,8 @@
 
 require_relative 'card_deck'
 
+# CardShoe is where the player draw cards from
+# A card shoe consists of all the cards from a given number of decks
 class CardShoe
   attr_accessor :card_decks, :num_decks, :did_shuffle
 
@@ -46,7 +48,7 @@ class CardShoe
   end
 
   def shuffle_decks
-    @card_decks.each(&:shuffle!)
+    @card_decks.each(&:shuffle)
     @did_shuffle = true
   end
 

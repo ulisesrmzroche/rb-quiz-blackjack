@@ -12,7 +12,7 @@ RSpec.describe Player do
     deck = CardDeck.new
     p = Player.new
     p.current_score = 17
-    card = deck.draw_cards!(1)
+    card = deck.draw_cards(1)
     p.add_card_to_hand(card)
     expect(p.current_score).to eq(17)
   end

@@ -2,11 +2,12 @@
 
 require_relative 'card'
 
+require_relative 'card_deck_builder'
 class CardDeck
   attr_accessor :cards
 
   def initialize
-    @cards = generate_cards
+    @cards = CardDeckBuilder.build
   end
 
   def shuffle
@@ -29,17 +30,5 @@ class CardDeck
 
   def total_card_count
     cards.length
-  end
-
-  def generate_cards
-    stack = []
-    ranks = %w[A 2 3 4 5 6 7 8 9 10 J Q K]
-    suits = %w[s h d c]
-    suits.each do |suit|
-      ranks.size.times do |i|
-        stack << Card.new(ranks[i], suit)
-      end
-    end
-    stack
   end
 end
