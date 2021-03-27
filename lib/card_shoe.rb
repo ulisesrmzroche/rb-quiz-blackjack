@@ -8,23 +8,14 @@ class CardShoe
   attr_accessor :card_decks, :num_decks, :did_shuffle
 
   def initialize(num_decks = 6)
-    @card_decks = generate_card_decks(num_decks) || []
+    @card_decks = _make_card_decks(num_decks) || []
+    @card_deck_length = @card_decks.first.length
     @cards = @card_decks.flatten
     @did_shuffle = false
   end
 
   def shuffled?
     @did_shuffle == true
-  end
-
-  def generate_card_decks(num_decks)
-    card_decks = []
-    num_decks.times do
-      deck = CardDeck.new
-      deck.shuffle
-      card_decks << deck.cards
-    end
-    card_decks
   end
 
   def total_card_count
@@ -40,22 +31,34 @@ class CardShoe
   end
 
   def two_decks_remaining?
-    @card_decks.length == 2
-  end
-
-  def shuffle_cards
-    @cards.shuffle!
-    @did_shuffle = true
+    @cards.length == @card_deck_length * 2
   end
 
   def draw_cards(num_cards)
     return [] if empty?
-    return shuffle_cards if two_decks_remaining? && !shuffled?
+    return _shuffle_cards if two_decks_remaining? && !shuffled?
 
     cards = @cards.sample num_cards
     cards.each do |card|
       @cards.delete card
     end
     cards
+  end
+
+  private
+
+  def _make_card_decks(num_decks)
+    card_decks = []
+    num_decks.times do
+      deck = CardDeck.new
+      deck.shuffle
+      card_decks << deck.cards
+    end
+    card_decks
+  end
+
+  def _shuffle_cards
+    @cards.shuffle
+    @did_shuffle = true
   end
 end

@@ -17,13 +17,9 @@ RSpec.describe CardShoe do
   end
 
   it 'should shuffle decks given 2 decks remain' do
-    cs = CardShoe.new
+    cs = CardShoe.new(2)
     expect(cs.instance_variable_get(:@did_shuffle)).to be false
-    cs.card_decks = [
-      cs.card_decks[0],
-      cs.card_decks[1]
-    ]
     cs.draw_cards(2)
-    expect(cs.instance_variable_get(:@did_shuffle)).to be true
+    expect(cs.shuffled?).to be true
   end
 end
