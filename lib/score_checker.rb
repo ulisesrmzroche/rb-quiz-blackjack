@@ -1,31 +1,45 @@
 # frozen_string_literal: true
 
 # TODO: This should be refactored into a class
-module ScoreChecker
-  def get_winner(player, dealer, turn)
-    return 'Player' if player_won?(player, dealer, turn)
-    return 'Dealer' if dealer_won?(player, dealer, turn)
-    return 'None' if both_busted?(player, dealer) || tied?(player, dealer)
-    return 'Push' if tied?(player, dealer) && !both_busted?(player, dealer) && turn == 1 && player.current_score == 21
+class ScoreChecker
+
+  def initialize(player, dealer, turn)
+    @player = player
+    @dealer = dealer
+    @turn = turn
   end
 
-  def player_won?(player, dealer, turn)
-    dealer.did_bust? && (player.current_score <= 21) ||
-      !player.did_bust? && player.current_score > dealer.current_score && !dealer.can_draw? ||
-      player.current_score == 21 && dealer.current_score != 21 && turn == 1
+  def winner
+    if player_won?
+      'Player'
+    elsif dealer_won?
+      'Dealer'
+    elsif both_busted?
+      'None'
+    elsif tied?
+      'Push' if @turn == 1
+      'Tie'
+    end
   end
 
-  def dealer_won?(player, dealer, turn)
-    player.did_bust? && !dealer.did_bust? ||
-      !dealer.did_bust? && dealer.current_score > player.current_score && !player.can_draw?
+  def player_won?
+    @dealer.did_bust? && @player.current_score >= 17 ||
+      !@player.did_bust? && @player.current_score > @dealer.current_score && !@dealer.can_draw? ||
+      @player.current_score == 21 && @dealer.current_score != 21 && @turn == 1
   end
 
-  def both_busted?(player, dealer)
-    dealer.did_bust? && player.did_bust?
+  def dealer_won?
+    @player.did_bust? && !@dealer.did_bust? ||
+      !@dealer.did_bust? && @dealer.current_score > @player.current_score && !@player.can_draw?
   end
 
-  def tied?(player, dealer)
-    player.current_score == 21 && dealer.current_score == 21
+  def both_busted?
+    @dealer.did_bust? && @player.did_bust?
+  end
+
+  def tied?
+    @player.current_score == @dealer.current_score &&
+      !@player.can_draw? && !@dealer.can_draw?
   end
 
 end

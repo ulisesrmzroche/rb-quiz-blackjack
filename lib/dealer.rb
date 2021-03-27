@@ -7,4 +7,8 @@ class Dealer < Player
     super
     @name = 'Dealer'
   end
+
+  def did_bust?
+    @current_score > 21
+  end
 end

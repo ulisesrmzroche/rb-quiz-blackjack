@@ -4,14 +4,11 @@ require 'player'
 require 'dealer'
 require 'card'
 
-class DummyClass
-end
+
 RSpec.describe ScoreChecker do
   before :each do
     @dealer = Dealer.new
     @player = Player.new
-    @sc = DummyClass.new
-    @sc.extend(ScoreChecker)
   end
 
   it 'player should win if dealer busts and player didnt' do
@@ -28,9 +25,8 @@ RSpec.describe ScoreChecker do
     ]
     @player.save
     @dealer.save
-
-    winner = @sc.get_winner(@player, @dealer, 2)
-    expect(winner).to eq 'Player'
+    sc = ScoreChecker.new(@player, @dealer, 2)
+    expect(sc.winner).to eq 'Player'
   end
 
   it 'dealer should win if player busts and dealer didnt' do
@@ -48,7 +44,7 @@ RSpec.describe ScoreChecker do
     @player.save
     @dealer.save
 
-    winner = @sc.get_winner(@player, @dealer, 2)
-    expect(winner).to eq 'Dealer'
+    sc = ScoreChecker.new(@player, @dealer, 2)
+    expect(sc.winner).to eq 'Dealer'
   end
 end

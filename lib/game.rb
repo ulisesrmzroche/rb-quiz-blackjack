@@ -8,7 +8,6 @@ require_relative 'score_checker'
 
 class Game
   include Banners
-  include ScoreChecker
 
   attr_accessor :card_shoe, :winner, :round
 
@@ -71,18 +70,15 @@ class Game
 
     start_turn_banner turn
 
-    num_cards = first_turn? ? 1 : 2
+    num_cards = @turn == 1 ? 1 : 2
     players.each do |player|
       draw_cards_for_user num_cards, player
     end
-    return if zero_scores? && first_turn?
+    return if zero_scores? && @turn == 1
 
-    @winner = get_winner(@player, @dealer, @turn)
+    sc = ScoreChecker.new(@player, @dealer, @turn)
+    @winner = sc.winner if sc.winner
     end_turn
-  end
-
-  def first_turn?
-    @turn == 1
   end
 
   def zero_scores?
