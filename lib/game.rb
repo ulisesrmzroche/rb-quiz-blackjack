@@ -30,7 +30,7 @@ class Game
 
   def start
     start_banner @options
-    resolve_round @round until @game_over
+    resolve_round @round until @game_over || @card_shoe.empty?
     exit_game
   end
 
@@ -42,13 +42,9 @@ class Game
   end
 
   def resolve_round(round)
-    return end_game msg: 'Ran out of cards. Game over' if @card_shoe.empty?
-
     start_round_banner round
-    resolve_turn @turn until @winner
+    resolve_turn @turn until @winner || @card_shoe.empty?
     end_round
-
-    end_game msg: 'Single Hand Game', round: 1 if single_hand_game?
   end
 
   def single_hand_game?
@@ -66,17 +62,15 @@ class Game
   end
 
   def resolve_turn(turn)
-    return end_game msg: 'Ran out of cards. Game over' if @card_shoe.empty?
-
     start_turn_banner turn
 
-    num_cards = @turn == 1 ? 1 : 2
+    num_cards = turn == 1 ? 1 : 2
     players.each do |player|
       draw_cards_for_user num_cards, player
     end
-    return if zero_scores? && @turn == 1
+    return if zero_scores? && turn == 1
 
-    sc = ScoreChecker.new(@player, @dealer, @turn)
+    sc = ScoreChecker.new(@player, @dealer, turn)
     @winner = sc.winner if sc.winner
     end_turn
   end
@@ -91,6 +85,8 @@ class Game
   end
 
   def end_round
+    return end_game msg: 'Single Hand Game' if single_hand_game?
+
     setup_next_round
     clear_cards
     clear_game_state
