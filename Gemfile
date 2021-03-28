@@ -8,3 +8,4 @@ gem 'reek'
 gem 'rspec'
 gem 'rubocop'
 gem 'thor'
+gem 'rubycritic', require: false
